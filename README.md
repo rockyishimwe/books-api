@@ -11,7 +11,6 @@ books-api/
 |-- routes/
 |   `-- books.js         # All /api/books route handlers
 |-- .env                 # Environment variables, not committed
-|-- .env.example         # Template for environment variables
 |-- .gitignore
 |-- package.json
 |-- server.js            # Entry point: Express app and MongoDB connection
@@ -31,9 +30,9 @@ books-api/
 npm install
 ```
 
-### 3. Configure environment variables
+### 3. Create environment variables
 
-Copy `.env.example` to `.env` and update values if needed:
+Create a `.env` file in the project root and add:
 
 ```env
 PORT=5005
