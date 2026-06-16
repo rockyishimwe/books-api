@@ -36,7 +36,7 @@ npm install
 ### 3. Configure environment variables
 Rename `.env.example` to `.env` and update values:
 ```env
-PORT=5000
+PORT=5005
 MONGO_URI=mongodb://localhost:27017/booksdb
 ```
 For MongoDB Atlas, replace `MONGO_URI` with your Atlas connection string:
