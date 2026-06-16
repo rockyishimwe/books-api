@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models/Book');
 
-// ─────────────────────────────────────────
-// POST /api/books — Add a new book
-// ─────────────────────────────────────────
+// POST /api/books - Add a new book
 router.post('/', async (req, res) => {
   try {
     const { title, author, price } = req.body;
@@ -14,7 +12,6 @@ router.post('/', async (req, res) => {
 
     res.status(201).json(savedBook);
   } catch (err) {
-    // Mongoose validation errors
     if (err.name === 'ValidationError') {
       const messages = Object.values(err.errors).map((e) => e.message);
       return res.status(400).json({ error: messages.join(', ') });
@@ -23,9 +20,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// ─────────────────────────────────────────
-// GET /api/books — Return all books
-// ─────────────────────────────────────────
+// GET /api/books - Return all books
 router.get('/', async (req, res) => {
   try {
     const books = await Book.find().sort({ createdAt: -1 });
@@ -35,9 +30,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ─────────────────────────────────────────
-// GET /api/books/:id — Return one book by ID
-// ─────────────────────────────────────────
+// GET /api/books/:id - Return one book by ID
 router.get('/:id', async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);
@@ -48,17 +41,14 @@ router.get('/:id', async (req, res) => {
 
     res.json(book);
   } catch (err) {
-    // Invalid ObjectId format
     if (err.name === 'CastError') {
-      return res.status(400).json({ error: 'Invalid book ID' });
+      return res.status(404).json({ error: 'Book not found' });
     }
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// ─────────────────────────────────────────
-// PUT /api/books/:id — Update a book
-// ─────────────────────────────────────────
+// PUT /api/books/:id - Update a book
 router.put('/:id', async (req, res) => {
   try {
     const { title, author, price } = req.body;
@@ -67,8 +57,8 @@ router.put('/:id', async (req, res) => {
       req.params.id,
       { title, author, price },
       {
-        new: true,          // return the updated document
-        runValidators: true, // enforce schema validation on update
+        new: true,
+        runValidators: true
       }
     );
 
@@ -83,15 +73,13 @@ router.put('/:id', async (req, res) => {
       return res.status(400).json({ error: messages.join(', ') });
     }
     if (err.name === 'CastError') {
-      return res.status(400).json({ error: 'Invalid book ID' });
+      return res.status(404).json({ error: 'Book not found' });
     }
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// ─────────────────────────────────────────
-// DELETE /api/books/:id — Delete a book
-// ─────────────────────────────────────────
+// DELETE /api/books/:id - Delete a book
 router.delete('/:id', async (req, res) => {
   try {
     const book = await Book.findByIdAndDelete(req.params.id);
@@ -103,7 +91,7 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'Book deleted successfully', book });
   } catch (err) {
     if (err.name === 'CastError') {
-      return res.status(400).json({ error: 'Invalid book ID' });
+      return res.status(404).json({ error: 'Book not found' });
     }
     res.status(500).json({ error: 'Server error' });
   }
